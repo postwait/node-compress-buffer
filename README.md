@@ -8,10 +8,11 @@ A single-step Buffer compression library for Node.js.
 	compress = require('compress-buffer').compress;
 	uncompress = require('compress-buffer').uncompress;
 	
-	var rawData = fs.readFileSync("/etc/passwd");
+	var rawData = fs.readFileSync("/etc/passwd"),
+      rawDataLen = rawData.length;
 
 	var compressed   = compress(rawData);
-	var uncompressed = uncompress(compressed);
+	var uncompressed = uncompress(compressed, rawDataLen);
 
 	uncompressed == rawData // true!
 ```
