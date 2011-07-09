@@ -19,8 +19,8 @@ exports['basic compress']= function(test) {
 	test.expect(2);
 	var uncompressed = new Buffer(loremIpsum);
 	var compressed = compress(uncompressed);
-	test.equal(compressed.length,282);
-	test.equal(md5(compressed), "6e31946d851b7cab51e058653a16b666");
+	test.equal(compressed.length,265);
+	test.equal(md5(compressed), "8415ce600fe321d94af65257abc6a9f8");
 	test.done();
 }
 
