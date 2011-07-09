@@ -40,7 +40,9 @@ Handle<Value> compress(const Arguments& args) {
 	bool shouldFreeDataPointer=false;
 	
 	if (args.Length() < 1) { 
-		return Undefined();
+    return ThrowException(
+             Exception::TypeError(
+               String::New("Required arguments (Buffer or String)")));
 	}
 	
 	if (args[0]->IsString()) {
@@ -48,7 +50,9 @@ Handle<Value> compress(const Arguments& args) {
 		bytesIn = string.length();
 		
 		if (bytesIn<=MIN_BYTES) {
-			return scope.Close(args[0]);
+      return ThrowException(
+               Exception::Error(
+                 String::New("source string too small")));
 		}
 		
 		dataPointer = strdup(*string); 
@@ -59,7 +63,9 @@ Handle<Value> compress(const Arguments& args) {
 		bytesIn=Buffer::Length(bufferIn);
 		
 		if (bytesIn<=MIN_BYTES) {
-			return scope.Close(args[0]);
+      return ThrowException(
+               Exception::Error(
+                 String::New("source string too small")));
 		}
 		
 		dataPointer=Buffer::Data(bufferIn);
@@ -89,7 +95,9 @@ Handle<Value> compress(const Arguments& args) {
 			free(dataPointer); 
 			dataPointer = NULL;
 		}
-		return Undefined();
+    return ThrowException(
+             Exception::Error(
+               String::New("deflation error")));
 	}
 	
 	bytesCompressed=strmCompress.total_out;
@@ -128,7 +136,9 @@ Handle<Value> uncompress(const Arguments &args) {
 	if (inflate(&strmUncompress, Z_FINISH) != Z_STREAM_END) {
 		inflateReset(&strmUncompress);
 		free(bufferOut);
-		return Undefined();
+    return ThrowException(
+             Exception::Error(
+               String::New("inflation error")));
 	}
 	
 	bytesUncompressed=strmUncompress.total_out;

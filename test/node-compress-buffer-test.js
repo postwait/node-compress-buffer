@@ -58,16 +58,19 @@ exports['compress string']= function(test) {
 exports['compress short']= function(test) {
 	test.expect(2);
 	var buffer = new Buffer("too short");
-	var compressed = compress(buffer);
-	test.equal(compressed,buffer);
-	test.equal(compressed.length,buffer.length);
+	var compressed;
+  try { compressed = compress(buffer); }
+  catch(e) { test.ok(e); }
+	test.ok(compressed == null);
 	test.done();
 }
 
 exports['errors']= function(test) {
-	test.expect(3);
-	var uncompressed, compressed = compress("");
-	test.ok(compressed.length>=0);
+	test.expect(4);
+	var uncompressed, compressed;
+  try { compressed = compress(""); }
+  catch(e) { test.ok(e); }
+  test.ok(compressed == null);
 	
 	try {
 		uncompressed = uncompress(" sfsdcfgdfgsdgfdsgdgdsgdfgsdfgsdfgdfgfsfd ", 1000);
