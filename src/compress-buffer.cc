@@ -108,13 +108,16 @@ Handle<Value> compress(const Arguments& args) {
 	
 
 Handle<Value> uncompress(const Arguments &args) {
-	if (args.Length() < 1 || !Buffer::HasInstance(args[0])) {
-		return Undefined();
+	if (args.Length() < 2 || !Buffer::HasInstance(args[0]) ||
+      !args[1]->IsNumber()) {
+    return ThrowException(
+             Exception::TypeError(
+               String::New("Required arguments (Buffer, decompresslen)")));
 	}
 	
 	Local<Object> bufferIn=args[0]->ToObject();
 
-	size_t bytesUncompressed=999*1024*1024; // it's about max size that V8 supports
+	size_t bytesUncompressed= args[1]->IntegerValue();
 	char *bufferOut=(char*) malloc(bytesUncompressed);
 
 	strmUncompress.next_in=(Bytef*) Buffer::Data(bufferIn);

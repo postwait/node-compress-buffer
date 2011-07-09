@@ -28,7 +28,7 @@ exports['basic uncompress']= function(test) {
 	test.expect(2);
 	var uncompressed = new Buffer(loremIpsum);
 	var compressed = compress(uncompressed);
-	uncompressed = uncompress(compressed);
+	uncompressed = uncompress(compressed, uncompressed.length);
 	test.equal(uncompressed.length,loremIpsum.length);
 	test.equal(md5(uncompressed), "fa5c89f3c88b81bfd5e821b0316569af");
 	test.done();
@@ -65,11 +65,14 @@ exports['compress short']= function(test) {
 }
 
 exports['errors']= function(test) {
-	test.expect(2);
-	var compressed = compress("");
+	test.expect(3);
+	var uncompressed, compressed = compress("");
 	test.ok(compressed.length>=0);
 	
-	var uncompressed = uncompress(" sfsdcfgdfgsdgfdsgdgdsgdfgsdfgsdfgdfgfsfd ");
+	try {
+		uncompressed = uncompress(" sfsdcfgdfgsdgfdsgdgdsgdfgsdfgsdfgdfgfsfd ", 1000);
+	}
+  catch(e) { test.ok(e); }
 	test.ok(!uncompressed);
 	
 	test.done();
