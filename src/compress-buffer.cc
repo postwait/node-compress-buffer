@@ -18,7 +18,7 @@
 #define MIN_BYTES 32 
 
 // zlib magic something
-#define WBITS -8
+#define WBITS MAX_WBITS
 
 z_stream strmCompress;
 z_stream strmUncompress;
